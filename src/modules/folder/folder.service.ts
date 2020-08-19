@@ -31,12 +31,12 @@ export class FolderService {
     }
   }
 
-  async findOne({ id, parentId }): Promise<Folder> {
-    return this.model.findOne(id ? { _id: id } : { parentId });
+  async findOne(_id: string): Promise<Folder> {
+    return this.model.findOne({ _id });
   }
 
-  async findOneById(_id: string): Promise<Folder> {
-    return this.model.findOne({ _id });
+  async findMany(parentId: string, userId: string): Promise<Folder[]> {
+    return this.model.find({ parentId, userId });
   }
 
   async create(createDto: Partial<CreateFolderDto>): Promise<Folder> {
