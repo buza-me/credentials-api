@@ -15,8 +15,6 @@ const params = 'retryWrites=true&w=majority';
 
 export const MONGO_URI = `mongodb+srv://${credentials}@${address}/${MONGO_DB_NAME}?${params}`;
 
-console.log(MONGO_URI);
-
 export const MONGO_OPTIONS: ConnectionOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,

@@ -22,7 +22,6 @@ export class AuthService {
 
     if (user && user.password === password) {
       const { password, email, ...rest } = user?._doc;
-      console.log(rest);
       return rest;
     }
     return null;

@@ -21,7 +21,6 @@ export class FolderService {
   async userCreatedListener(payload: string): Promise<Folder> {
     const parentId: string = payload;
     const existingRootFolder: Folder = await this.model.findOne({ parentId });
-    console.log(existingRootFolder);
     if (!existingRootFolder) {
       const createDto: Partial<CreateFolderDto> = {
         name: 'root',
@@ -52,7 +51,6 @@ export class FolderService {
       await validateOrReject(createDto);
 
       const createdFolder: Folder = new this.model(createDto);
-      console.log('created:', createdFolder);
       return createdFolder.save();
     } catch (e) {
       logError(e, 'Create folder');

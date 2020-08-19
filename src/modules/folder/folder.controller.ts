@@ -41,9 +41,6 @@ export class FolderController {
   ): Promise<Folder> {
     const found = await this.service.findOne({ id, parentId });
     if (found) {
-      console.log(
-        `found userId; ${found.userId}, request user id: ${req.user._id}`,
-      );
       validateUserId(found.userId, req.user._id);
       return found;
     }
@@ -56,7 +53,6 @@ export class FolderController {
     @Body() updateDto: UpdateFolderDto,
     @Request() req,
   ): Promise<Folder> {
-    console.log(req);
     const found = await this.service.findOneById(id);
     if (found) {
       validateUserId(found.userId, req.user._id);
