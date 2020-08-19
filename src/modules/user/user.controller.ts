@@ -5,7 +5,6 @@ import {
   Body,
   Patch,
   Delete,
-  Param,
   Request,
   Query,
   UseGuards,
@@ -15,6 +14,7 @@ import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { validateUserId } from '../../utils/helpers';
+import { User } from './user.schema';
 
 @ApiTags('user')
 @Controller('user')
@@ -28,7 +28,10 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findOne(@Query('$id') id: string, @Request() req) {
+  async findOne(
+    @Query('$id') id: string,
+    @Request() req: JwtRequest,
+  ): Promise<Partial<User>> | never {
     validateUserId(id, req.user._id);
     return await this.service.findOneById(id);
   }
@@ -38,15 +41,18 @@ export class UserController {
   async update(
     @Query('$id') id: string,
     @Body() updateDto: UpdateUserDto,
-    @Request() req,
-  ) {
+    @Request() req: JwtRequest,
+  ): Promise<User> | never {
     validateUserId(id, req.user._id);
     return await this.service.updateOne(id, updateDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete()
-  async remove(@Query('$id') id: string, @Request() req) {
+  async remove(
+    @Query('$id') id: string,
+    @Request() req: JwtRequest,
+  ): Promise<void> | never {
     validateUserId(id, req.user._id);
     return await this.service.deleteOne(id);
   }

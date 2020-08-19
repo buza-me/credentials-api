@@ -2,6 +2,7 @@ import { Controller, Request, Post, UseGuards, Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { LoginDto } from './dto/login.dto';
 
 @ApiTags('auth')
@@ -13,7 +14,7 @@ export class AuthController {
   @Post('login')
   async login(
     @Body() LoginDto: LoginDto,
-    @Request() req: Request & any,
+    @Request() req: JwtRequest,
   ): Promise<any> {
     return this.authService.login(req.user);
   }

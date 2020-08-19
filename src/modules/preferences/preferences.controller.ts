@@ -23,7 +23,7 @@ export class PreferencesController {
   @Get()
   async findOne(
     @Query('$userid') userid: string,
-    @Request() req,
+    @Request() req: JwtRequest,
   ): Promise<Preferences> | never {
     validateUserId(userid, req.user._id);
     return await this.service.findOneByUserId(userid);
@@ -34,7 +34,7 @@ export class PreferencesController {
   async update(
     @Query('$id') id: string,
     @Body() updateDto: UpdatePreferencesDto,
-    @Request() req,
+    @Request() req: JwtRequest,
   ): Promise<Preferences> | never {
     const found = await this.service.findOneById(id);
     if (found) {

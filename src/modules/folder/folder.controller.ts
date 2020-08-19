@@ -25,7 +25,7 @@ export class FolderController {
   @Post()
   async create(
     @Body() createDto: CreateFolderDto,
-    @Request() req,
+    @Request() req: JwtRequest,
   ): Promise<Folder> {
     return await this.service.create({ ...createDto, userId: req.user._id });
   }
@@ -35,7 +35,7 @@ export class FolderController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async findOne(
-    @Request() req,
+    @Request() req: JwtRequest,
     @Query('$id') id?: string,
     @Query('$parentId') parentId?: string,
   ): Promise<Folder> {
@@ -51,7 +51,7 @@ export class FolderController {
   async update(
     @Query('$id') id: string,
     @Body() updateDto: UpdateFolderDto,
-    @Request() req,
+    @Request() req: JwtRequest,
   ): Promise<Folder> {
     const found = await this.service.findOneById(id);
     if (found) {
@@ -64,7 +64,7 @@ export class FolderController {
   @Delete()
   async remove(
     @Query('$id') id: string,
-    @Request() req,
+    @Request() req: JwtRequest,
   ): Promise<void> | never {
     const found = await this.service.findOneById(id);
     if (found) {

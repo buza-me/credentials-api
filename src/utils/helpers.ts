@@ -13,9 +13,9 @@ export function logError(e: Error, source: string): void {
 
 export function validateUserId(
   requestId: string,
-  jwtUserId: string,
+  JwtRequestId: string,
 ): void | never {
-  if (requestId !== jwtUserId) {
+  if (requestId !== JwtRequestId) {
     throw new UnauthorizedException();
   }
 }

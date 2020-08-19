@@ -25,7 +25,7 @@ export class RecordController {
   @Post()
   async create(
     @Body() createDto: CreateRecordDto,
-    @Request() req,
+    @Request() req: JwtRequest,
   ): Promise<Record> {
     return await this.service.create({ ...createDto, userId: req.user._id });
   }
@@ -35,7 +35,7 @@ export class RecordController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async findOne(
-    @Request() req,
+    @Request() req: JwtRequest,
     @Query('$id') id?: string,
     @Query('$parentId') parentId?: string,
   ): Promise<Record> | never {
@@ -51,7 +51,7 @@ export class RecordController {
   async update(
     @Query('$id') id: string,
     @Body() updateDto: UpdateRecordDto,
-    @Request() req,
+    @Request() req: JwtRequest,
   ): Promise<Record> | never {
     const found = await this.service.findOneById(id);
     if (found) {
@@ -64,7 +64,7 @@ export class RecordController {
   @Delete()
   async remove(
     @Query('$id') id: string,
-    @Request() req,
+    @Request() req: JwtRequest,
   ): Promise<void> | never {
     const found = await this.service.findOneById(id);
     if (found) {
