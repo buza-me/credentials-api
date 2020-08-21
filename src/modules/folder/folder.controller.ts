@@ -31,18 +31,24 @@ export class FolderController {
   }
 
   @ApiQuery({ name: '$id', required: false })
-  @ApiQuery({ name: '$parentId', required: false })
+  @ApiQuery({ name: '$userid', required: false })
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findOne(
+  async find(
     @Request() req: JwtRequest,
     @Query('$id') id?: string,
-    @Query('$parentId') parentId?: string,
-  ): Promise<Folder> {
-    const found = await this.service.findOne({ id, parentId });
-    if (found) {
-      validateUserId(found.userId, req.user._id);
-      return found;
+    @Query('$userid') parentId?: string,
+  ): Promise<Folder | Folder[]> {
+    if (id) {
+      const found = await this.service.findOne(id);
+      if (found) {
+        validateUserId(found.userId, req.user._id);
+        return found;
+      }
+    }
+
+    if (parentId) {
+      return await this.service.findMany(req.user._id);
     }
   }
 
@@ -53,7 +59,7 @@ export class FolderController {
     @Body() updateDto: UpdateFolderDto,
     @Request() req: JwtRequest,
   ): Promise<Folder> {
-    const found = await this.service.findOneById(id);
+    const found = await this.service.findOne(id);
     if (found) {
       validateUserId(found.userId, req.user._id);
       return await this.service.updateOne(id, updateDto);
@@ -66,7 +72,7 @@ export class FolderController {
     @Query('$id') id: string,
     @Request() req: JwtRequest,
   ): Promise<void> | never {
-    const found = await this.service.findOneById(id);
+    const found = await this.service.findOne(id);
     if (found) {
       validateUserId(found.userId, req.user._id);
       return await this.service.deleteOne(id);

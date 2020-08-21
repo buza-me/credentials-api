@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class Record extends Document {
-  @Prop({ default: 'file' })
+  @Prop({ default: 'record' })
   objectType: string;
 
   @Prop()

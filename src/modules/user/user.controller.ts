@@ -28,12 +28,8 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findOne(
-    @Query('$id') id: string,
-    @Request() req: JwtRequest,
-  ): Promise<Partial<User>> | never {
-    validateUserId(id, req.user._id);
-    return await this.service.findOneById(id);
+  async findOne(@Request() req: JwtRequest): Promise<Partial<User>> | never {
+    return await this.service.findOneById(req.user._id);
   }
 
   @UseGuards(JwtAuthGuard)
