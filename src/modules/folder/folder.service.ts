@@ -35,8 +35,8 @@ export class FolderService {
     return this.model.findOne({ _id });
   }
 
-  async findMany(parentId: string, userId: string): Promise<Folder[]> {
-    return this.model.find({ parentId, userId });
+  async findMany(userId: string): Promise<Folder[]> {
+    return this.model.find({ userId });
   }
 
   async create(createDto: Partial<CreateFolderDto>): Promise<Folder> {

@@ -18,7 +18,6 @@ export class CreateRecordDto {
   @IsNotEmpty()
   readonly parentId: string;
 
-  @ApiProperty()
   @IsNotEmpty()
   readonly userId: string;
 

@@ -54,8 +54,8 @@ export class RecordService {
     }
   }
 
-  async findMany(parentId: string, userId: string): Promise<Record[]> {
-    return this.model.find({ parentId, userId });
+  async findMany(userId: string): Promise<Record[]> {
+    return this.model.find({ userId });
   }
 
   async findOne(_id: string): Promise<Record> {

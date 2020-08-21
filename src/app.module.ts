@@ -9,6 +9,7 @@ import {
   FolderModule,
   RecordModule,
   AuthModule,
+  SavedModule,
 } from './modules';
 
 const imports = [
@@ -18,6 +19,7 @@ const imports = [
   RecordModule,
   UserModule,
   AuthModule,
+  SavedModule,
 ];
 
 @Module({

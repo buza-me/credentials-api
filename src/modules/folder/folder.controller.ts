@@ -31,13 +31,13 @@ export class FolderController {
   }
 
   @ApiQuery({ name: '$id', required: false })
-  @ApiQuery({ name: '$parentId', required: false })
+  @ApiQuery({ name: '$userid', required: false })
   @UseGuards(JwtAuthGuard)
   @Get()
   async find(
     @Request() req: JwtRequest,
     @Query('$id') id?: string,
-    @Query('$parentId') parentId?: string,
+    @Query('$userid') parentId?: string,
   ): Promise<Folder | Folder[]> {
     if (id) {
       const found = await this.service.findOne(id);
@@ -48,7 +48,7 @@ export class FolderController {
     }
 
     if (parentId) {
-      return await this.service.findMany(parentId, req.user._id);
+      return await this.service.findMany(req.user._id);
     }
   }
 
