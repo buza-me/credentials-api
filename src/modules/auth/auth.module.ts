@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
-import { JWT_SECRET } from './constants';
+import { JWT_SECRET, TOKEN_LIFE_LENGTH } from './constants';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { JWT_SECRET } from './constants';
     PassportModule,
     JwtModule.register({
       secret: JWT_SECRET,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: TOKEN_LIFE_LENGTH },
     }),
   ],
   controllers: [AuthController],
