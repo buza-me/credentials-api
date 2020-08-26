@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.schema';
+import { TOKEN_LIFE_LENGTH } from './constants';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,7 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
       userId: user._id,
+      willExpireTime: new Date(Date.now() + TOKEN_LIFE_LENGTH * 1000),
     };
   }
 
