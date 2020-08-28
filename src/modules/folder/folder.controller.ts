@@ -31,13 +31,11 @@ export class FolderController {
   }
 
   @ApiQuery({ name: '$id', required: false })
-  @ApiQuery({ name: '$userid', required: false })
   @UseGuards(JwtAuthGuard)
   @Get()
   async find(
     @Request() req: JwtRequest,
     @Query('$id') id?: string,
-    @Query('$userid') parentId?: string,
   ): Promise<Folder | Folder[]> {
     if (id) {
       const found = await this.service.findOne(id);
@@ -45,9 +43,7 @@ export class FolderController {
         validateUserId(found.userId, req.user._id);
         return found;
       }
-    }
-
-    if (parentId) {
+    } else {
       return await this.service.findMany(req.user._id);
     }
   }

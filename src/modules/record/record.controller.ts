@@ -31,13 +31,11 @@ export class RecordController {
   }
 
   @ApiQuery({ name: '$id', required: false })
-  @ApiQuery({ name: '$userid', required: false })
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findOne(
+  async getRecords(
     @Request() req: JwtRequest,
     @Query('$id') id?: string,
-    @Query('$userid') parentId?: string,
   ): Promise<Record | Record[]> | never {
     if (id) {
       const found = await this.service.findOne(id);
@@ -45,10 +43,8 @@ export class RecordController {
         validateUserId(found.userId, req.user._id);
         return found;
       }
-    }
-
-    if (parentId) {
-      return await this.service.findMany(req.user.id);
+    } else {
+      return await this.service.findMany(req.user._id);
     }
   }
 

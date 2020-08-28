@@ -21,12 +21,8 @@ export class PreferencesController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findOne(
-    @Query('$userid') userid: string,
-    @Request() req: JwtRequest,
-  ): Promise<Preferences> | never {
-    validateUserId(userid, req.user._id);
-    return await this.service.findOneByUserId(userid);
+  async findOne(@Request() req: JwtRequest): Promise<Preferences> {
+    return await this.service.findOneByUserId(req.user._id);
   }
 
   @UseGuards(JwtAuthGuard)
