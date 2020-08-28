@@ -43,9 +43,9 @@ export class RecordController {
         validateUserId(found.userId, req.user._id);
         return found;
       }
+    } else {
+      return await this.service.findMany(req.user._id);
     }
-
-    return await this.service.findMany(req.user._id);
   }
 
   @UseGuards(JwtAuthGuard)
