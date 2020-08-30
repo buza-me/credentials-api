@@ -68,8 +68,6 @@ export class PreferencesService {
       );
       await validateOrReject(updateDto);
       const response: Response = await this.model.updateOne({ _id }, updateDto);
-      console.log('dto:', updateDto);
-      console.log(response);
       if (response.ok) {
         return await this.model.findOne({ _id });
       }
