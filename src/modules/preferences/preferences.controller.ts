@@ -28,14 +28,12 @@ export class PreferencesController {
   @UseGuards(JwtAuthGuard)
   @Patch()
   async update(
-    @Query('$id') id: string,
     @Body() updateDto: UpdatePreferencesDto,
     @Request() req: JwtRequest,
   ): Promise<Preferences> | never {
-    const found = await this.service.findOneById(id);
+    const found = await this.service.findOneByUserId(req.user._id);
     if (found) {
-      validateUserId(found.userId, req.user._id);
-      return await this.service.updateOne(id, updateDto);
+      return await this.service.updateOne(found._id, updateDto);
     }
   }
 }
