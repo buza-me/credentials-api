@@ -10,9 +10,9 @@ type SavedFile = Folder & {
   children?: { folders: Folder[]; records: Record[] };
 };
 
-@ApiTags('saved')
-@Controller('saved')
-export class SavedController {
+@ApiTags('files')
+@Controller('files')
+export class FilesController {
   constructor(
     private folderService: FolderService,
     private recordService: RecordService,
