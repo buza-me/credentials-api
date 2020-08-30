@@ -3,14 +3,12 @@ import {
   Get,
   Body,
   Patch,
-  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PreferencesService } from './preferences.service';
 import { UpdatePreferencesDto } from './dto';
-import { validateUserId } from '../../utils/helpers';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Preferences } from './preferences.schema';
 
@@ -28,14 +26,12 @@ export class PreferencesController {
   @UseGuards(JwtAuthGuard)
   @Patch()
   async update(
-    @Query('$id') id: string,
     @Body() updateDto: UpdatePreferencesDto,
     @Request() req: JwtRequest,
   ): Promise<Preferences> | never {
-    const found = await this.service.findOneById(id);
+    const found = await this.service.findOneByUserId(req.user._id);
     if (found) {
-      validateUserId(found.userId, req.user._id);
-      return await this.service.updateOne(id, updateDto);
+      return await this.service.updateOne(found._id, updateDto);
     }
   }
 }
