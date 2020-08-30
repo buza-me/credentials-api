@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { SavedController } from './saved.controller';
+import { FilesController } from './files.controller';
 import { FolderModule } from '../folder/folder.module';
 import { RecordModule } from '../record/record.module';
 
 @Module({
   imports: [FolderModule, RecordModule],
-  controllers: [SavedController],
+  controllers: [FilesController],
   providers: [],
   exports: [],
 })
-export class SavedModule {}
+export class FilesModule {}
