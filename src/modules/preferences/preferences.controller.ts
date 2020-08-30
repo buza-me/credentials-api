@@ -3,14 +3,12 @@ import {
   Get,
   Body,
   Patch,
-  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PreferencesService } from './preferences.service';
 import { UpdatePreferencesDto } from './dto';
-import { validateUserId } from '../../utils/helpers';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Preferences } from './preferences.schema';
 
