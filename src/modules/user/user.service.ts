@@ -2,7 +2,12 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { validateOrReject } from 'class-validator';
-import { copyObjectProperties, logError } from '../../utils/helpers';
+import {
+  copyObjectProperties,
+  logError,
+  encrypt,
+  compareWithHash,
+} from '../../utils/helpers';
 import { User } from './user.schema';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { bridge } from '../../utils/bridgeProvider';
@@ -22,6 +27,7 @@ export class UserService {
           ...createDto,
           createTime,
           updateTime: createTime,
+          password: await encrypt(createDto.password),
         });
 
         await validateOrReject(createDto);
@@ -68,9 +74,16 @@ export class UserService {
     const foundUser = await this.model.findOne({ _id });
     if (foundUser) {
       try {
+        const password =
+          !updateDto.password ||
+          (await compareWithHash(foundUser.password, updateDto.password))
+            ? foundUser.password
+            : await encrypt(updateDto.password);
+
         updateDto = copyObjectProperties<UpdateUserDto>(new UpdateUserDto(), {
           ...updateDto,
           updateTime: new Date(),
+          password,
         });
 
         await validateOrReject(updateDto);
