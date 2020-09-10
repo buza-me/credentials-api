@@ -81,7 +81,6 @@ export class FolderService {
     let collection = [parent];
     const folders = await this.model.find({
       parentId: parent._id,
-      objectType: 'folder',
     });
     if (folders?.length) {
       folders.forEach(async folder => {
