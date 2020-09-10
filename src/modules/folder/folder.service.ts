@@ -84,4 +84,30 @@ export class FolderService {
     }
     await this.model.deleteOne({ _id });
   }
+
+  async updateParentIdForMany(
+    folders: Array<Folder>,
+    parentId: string,
+  ): Promise<Folder[]> {
+    const updateDto: UpdateFolderDto = copyObjectProperties<UpdateFolderDto>(
+      new UpdateFolderDto(),
+      {
+        parentId: parentId,
+        updateTime: new Date(),
+      },
+    );
+
+    const ids = folders.map(record => record._id);
+
+    const response: Response = await this.model.updateMany(
+      { _id: { $in: ids } },
+      updateDto,
+    );
+
+    if (response.ok) {
+      return await this.model.find({ _id: { $in: ids } });
+    } else {
+      return [];
+    }
+  }
 }

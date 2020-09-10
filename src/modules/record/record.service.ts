@@ -65,4 +65,30 @@ export class RecordService {
   async deleteOne(_id: string): Promise<void> {
     await this.model.deleteOne({ _id });
   }
+
+  async updateParentIdForMany(
+    records: Array<Record>,
+    parentId: string,
+  ): Promise<Record[]> {
+    const updateDto: UpdateRecordDto = copyObjectProperties<UpdateRecordDto>(
+      new UpdateRecordDto(),
+      {
+        parentId: parentId,
+        updateTime: new Date(),
+      },
+    );
+
+    const ids = records.map(record => record._id);
+
+    const response: Response = await this.model.updateMany(
+      { _id: { $in: ids } },
+      updateDto,
+    );
+
+    if (response.ok) {
+      return await this.model.find({ _id: { $in: ids } });
+    } else {
+      return [];
+    }
+  }
 }

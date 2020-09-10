@@ -11,6 +11,8 @@ export class UpdateRecordDto {
   @ApiProperty()
   readonly password: string;
 
+  readonly parentId: string;
+
   @IsNotEmpty()
   readonly updateTime: any;
 }
