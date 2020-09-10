@@ -13,6 +13,9 @@ export class RecordService {
     bridge.addActionListener('userDeleted', async (payload: string) =>
       this.model.deleteMany({ userId: payload }),
     );
+    bridge.addActionListener('foldersDeleted', async (payload: string[]) =>
+      this.model.deleteMany({ parentId: { $in: payload } }),
+    );
   }
 
   async create(createDto: CreateRecordDto): Promise<Record> {
