@@ -77,11 +77,56 @@ export class FolderService {
     }
   }
 
+  async getFoldersRecursively(parent: Folder): Promise<Folder[]> {
+    let collection = [parent];
+    const folders = await this.model.find({
+      parentId: parent._id,
+    });
+    if (folders?.length) {
+      await Promise.all(
+        folders.map(async folder => {
+          const collected = await this.getFoldersRecursively(folder);
+          collection = [...collection, ...collected];
+        }),
+      );
+    }
+    return collection;
+  }
+
   async deleteOne(_id: string): Promise<void> {
     const folder = await this.model.findOne({ _id });
     if (folder.parentId === folder.userId) {
       return;
     }
-    await this.model.deleteOne({ _id });
+    const foldersToDelete = await this.getFoldersRecursively(folder);
+    const folderIds = foldersToDelete.map(folder => folder._id);
+    await this.model.deleteMany({ _id: { $in: folderIds } });
+    await bridge.dispatchAction('foldersDeleted', folderIds);
+  }
+
+  async updateParentIdForMany(
+    folders: Array<Folder>,
+    parentId: string,
+  ): Promise<Folder[]> {
+    const updateDto: UpdateFolderDto = copyObjectProperties<UpdateFolderDto>(
+      new UpdateFolderDto(),
+      {
+        parentId: parentId,
+        updateTime: new Date(),
+      },
+    );
+
+    const ids = folders.map(record => record._id);
+
+    const response: Response = await this.model.updateMany(
+      { _id: { $in: ids } },
+      updateDto,
+    );
+
+    if (response.ok) {
+      return await this.model.find({ _id: { $in: ids } });
+    } else {
+      return [];
+    }
   }
 }

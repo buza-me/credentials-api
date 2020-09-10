@@ -13,6 +13,9 @@ export class RecordService {
     bridge.addActionListener('userDeleted', async (payload: string) =>
       this.model.deleteMany({ userId: payload }),
     );
+    bridge.addActionListener('foldersDeleted', async (payload: string[]) =>
+      this.model.deleteMany({ parentId: { $in: payload } }),
+    );
   }
 
   async create(createDto: CreateRecordDto): Promise<Record> {
@@ -64,5 +67,31 @@ export class RecordService {
 
   async deleteOne(_id: string): Promise<void> {
     await this.model.deleteOne({ _id });
+  }
+
+  async updateParentIdForMany(
+    records: Array<Record>,
+    parentId: string,
+  ): Promise<Record[]> {
+    const updateDto: UpdateRecordDto = copyObjectProperties<UpdateRecordDto>(
+      new UpdateRecordDto(),
+      {
+        parentId: parentId,
+        updateTime: new Date(),
+      },
+    );
+
+    const ids = records.map(record => record._id);
+
+    const response: Response = await this.model.updateMany(
+      { _id: { $in: ids } },
+      updateDto,
+    );
+
+    if (response.ok) {
+      return await this.model.find({ _id: { $in: ids } });
+    } else {
+      return [];
+    }
   }
 }

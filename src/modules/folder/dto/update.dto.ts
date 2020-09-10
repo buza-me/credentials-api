@@ -6,6 +6,9 @@ export class UpdateFolderDto {
   @IsOptional()
   readonly name: string;
 
+  @IsOptional()
+  readonly parentId: string;
+
   @IsNotEmpty()
   readonly updateTime: any;
 }
