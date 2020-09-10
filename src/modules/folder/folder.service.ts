@@ -83,10 +83,12 @@ export class FolderService {
       parentId: parent._id,
     });
     if (folders?.length) {
-      folders.forEach(async folder => {
-        const collected = await this.getFoldersRecursively(folder);
-        collection = [...collected];
-      });
+      await Promise.all(
+        folders.map(async folder => {
+          const collected = await this.getFoldersRecursively(folder);
+          collection = [...collection, ...collected];
+        }),
+      );
     }
     return collection;
   }
