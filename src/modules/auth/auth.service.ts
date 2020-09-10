@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.schema';
 import { TOKEN_LIFE_LENGTH } from './constants';
+import { compareWithHash } from '../../utils/helpers';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,9 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<any> {
     const user: any = await this.userService.findOneByEmail(email);
 
-    if (user && user.password === password) {
+    const isValid = user && (await compareWithHash(password, user.password));
+    console.log(isValid);
+    if (isValid) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, email, ...rest } = user?._doc;
       return rest;
