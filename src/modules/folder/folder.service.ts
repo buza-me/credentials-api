@@ -79,7 +79,10 @@ export class FolderService {
 
   async getFoldersRecursively(parent: Folder): Promise<Folder[]> {
     let collection = [parent];
-    const folders = await this.model.find({ parentId: parent._id });
+    const folders = await this.model.find({
+      parentId: parent._id,
+      objectType: 'folder',
+    });
     if (folders?.length) {
       folders.forEach(async folder => {
         const collected = await this.getFoldersRecursively(folder);
